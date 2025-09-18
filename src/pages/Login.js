@@ -30,14 +30,8 @@ export default function Login() {
 
       // Save JWT + role
       localStorage.setItem("token", res.data.token);
-      localStorage.setItem("role", res.data.role);
 
-      // Redirect based on role
-      if (res.data.role === "ADMIN") {
-        navigate("/admin");
-      } else {
-        navigate("/customer");
-      }
+      navigate("/customer");
     } catch (err) {
       setError(err.response?.data?.message || "Login failed");
     } finally {
@@ -75,6 +69,16 @@ export default function Login() {
           {loading ? "Logging in..." : "Login"}
         </button>
       </form>
+
+      
+      <div className="mt-3 text-center">
+        <button
+          className="btn btn-link"
+          onClick={() => navigate("/register")}
+        >
+          Don’t have an account? Sign Up
+        </button>
+      </div>
     </div>
   );
 }
