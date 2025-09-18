@@ -6,6 +6,7 @@ import ProtectedRoute from "./components/ProtectedRoute.js";
 import CustomerDashboard from "./pages/CustomerDashboard.js";
 import AdminDashboard from "./pages/AdminDashboard.js";
 import Landing from "./components/Landing.js";
+import ProfileForm from "./components/ProfileForm.js";
 
 function App() {
   const token = localStorage.getItem("token");
@@ -42,6 +43,8 @@ function App() {
             </ProtectedRoute>
           }
         />
+        <Route path="/profile" element={<ProfileForm />} />
+
       </Routes>
     </>
   );

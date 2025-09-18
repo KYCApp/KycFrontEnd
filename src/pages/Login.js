@@ -28,10 +28,20 @@ export default function Login() {
     try {
       const res = await api.post("/auth/login", formData);
 
-      // Save JWT + role
+      // Save JWT
       localStorage.setItem("token", res.data.token);
 
-      navigate("/customer");
+      // ✅ Check if customer profile exists
+      try {
+        await api.get("/customers/me");
+        navigate("/customer"); // profile exists → dashboard
+      } catch (err) {
+        if (err.response && err.response.status === 404) {
+          navigate("/profile"); // no profile → go to profile form
+        } else {
+          setError("Failed to fetch profile");
+        }
+      }
     } catch (err) {
       setError(err.response?.data?.message || "Login failed");
     } finally {
@@ -70,7 +80,6 @@ export default function Login() {
         </button>
       </form>
 
-      
       <div className="mt-3 text-center">
         <button
           className="btn btn-link"
