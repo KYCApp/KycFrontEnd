@@ -1,76 +1,48 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Navbar from './components/Navbar';
-import ProtectedRoute from './components/ProtectedRoute';
-import Loader from './components/Loader';
-
-import Login from './pages/Login';
-import Register from './pages/Register';
-import CustomerDashboard from './pages/CustomerDashboard';
-import AdminDashboard from './pages/AdminDashboard';
-import AdminCustomers from './pages/AdminCustomers';
-import AdminDocuments from './pages/AdminDocuments';
-import AuditLogs from './pages/AuditLogs';
+import { Routes, Route, useLocation } from "react-router-dom";
+import Navbar from "./components/Navbar.js";
+import Login from "./pages/Login.js";
+import Register from "./pages/Register.js";
+import ProtectedRoute from "./components/ProtectedRoute.js";
+import CustomerDashboard from "./pages/CustomerDashboard.js";
+import AdminDashboard from "./pages/AdminDashboard.js";
+import Landing from "./components/Landing.js";
 
 function App() {
+  const token = localStorage.getItem("token");
+  const location = useLocation();
+
+  const showNavbar =
+    token && (location.pathname.startsWith("/customer") || location.pathname.startsWith("/admin"));
+
   return (
-    <Router>
-      <Navbar />
-      <div className="container mt-4">
-        <Routes>
-          {/* Public routes */}
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
+    <>
+      {showNavbar && <Navbar />}
+      <Routes>
+        {/* Public routes */}
+        <Route path="/" element={<Landing />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
 
-          {/* Customer routes */}
-          <Route
-            path="/customer/dashboard"
-            element={
-              <ProtectedRoute role="CUSTOMER">
-                <CustomerDashboard />
-              </ProtectedRoute>
-            }
-          />
+        {/* Protected routes */}
+        <Route
+          path="/customer"
+          element={
+            <ProtectedRoute role="CUSTOMER">
+              <CustomerDashboard />
+            </ProtectedRoute>
+          }
+        />
 
-          {/* Admin routes */}
-          <Route
-            path="/admin/dashboard"
-            element={
-              <ProtectedRoute role="ADMIN">
-                <AdminDashboard />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/admin/customers"
-            element={
-              <ProtectedRoute role="ADMIN">
-                <AdminCustomers />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/admin/documents"
-            element={
-              <ProtectedRoute role="ADMIN">
-                <AdminDocuments />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/admin/audit-logs"
-            element={
-              <ProtectedRoute role="ADMIN">
-                <AuditLogs />
-              </ProtectedRoute>
-            }
-          />
-
-          {/* Fallback */}
-          <Route path="*" element={<Login />} />
-        </Routes>
-      </div>
-    </Router>
+        <Route
+          path="/admin"
+          element={
+            <ProtectedRoute role="ADMIN">
+              <AdminDashboard />
+            </ProtectedRoute>
+          }
+        />
+      </Routes>
+    </>
   );
 }
 
