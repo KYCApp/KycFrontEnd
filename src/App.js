@@ -11,6 +11,7 @@ function App() {
   const token = localStorage.getItem("token");
   const location = useLocation();
 
+  // Navbar only on dashboards
   const showNavbar =
     token && (location.pathname.startsWith("/customer") || location.pathname.startsWith("/admin"));
 
@@ -27,7 +28,7 @@ function App() {
         <Route
           path="/customer"
           element={
-            <ProtectedRoute role="CUSTOMER">
+            <ProtectedRoute>
               <CustomerDashboard />
             </ProtectedRoute>
           }
@@ -36,7 +37,7 @@ function App() {
         <Route
           path="/admin"
           element={
-            <ProtectedRoute role="ADMIN">
+            <ProtectedRoute>
               <AdminDashboard />
             </ProtectedRoute>
           }
